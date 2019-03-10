@@ -13,11 +13,12 @@ import (
 // -------------------------------------------------------------------- //
 
 // Name name of the plugin
-const Name = "events"
+const Name = "gesture"
 
-type plugin struct {
-	isInit  bool
-	runtime tge.Runtime
+var _pluginInstance = &plugin{}
+
+func init() {
+	tge.Register(_pluginInstance)
 }
 
 func (p *plugin) Init(runtime tge.Runtime) error {
@@ -40,24 +41,6 @@ func (p *plugin) Dispose() {
 }
 
 // -------------------------------------------------------------------- //
-// Events
-// -------------------------------------------------------------------- //
-
-func (p *plugin) subscribeProxies() {
-	settings := p.runtime.GetSettings()
-	if settings.EventMask&PinchEventEnabled != 0 {
-
-	}
-}
-
-func (p *plugin) unsubscribeProxies() {
-	settings := p.runtime.GetSettings()
-	if settings.EventMask&PinchEventEnabled != 0 {
-
-	}
-}
-
-// -------------------------------------------------------------------- //
 // Gesture events
 // -------------------------------------------------------------------- //
 
@@ -72,6 +55,7 @@ type PinchEvent struct {
 	YOffset int32
 }
 
-func mouseEventProxy(event tge.Event) bool {
-	return false
+// Channel for pinch gesture/events
+func (e PinchEvent) Channel() string {
+	return "pinch"
 }
