@@ -49,10 +49,10 @@ const PinchEventEnabled = 0x20
 
 // PinchEvent for mobile gesture pinch event
 type PinchEvent struct {
-	// XOffset indicates zoom on X
-	XOffset int32
-	// YOffset indicates zoom on Y
-	YOffset int32
+	// Delta indicates the variation of distance between touches
+	Delta int32
+	// Ratio between X and Y pinch
+	Ratio float32
 }
 
 // Channel for pinch gesture/events

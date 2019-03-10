@@ -5,7 +5,7 @@
 package events
 
 import (
-	fmt "fmt"
+	"math"
 
 	tge "github.com/thommil/tge"
 )
@@ -15,10 +15,11 @@ import (
 // -------------------------------------------------------------------- //
 
 type plugin struct {
-	isInit         bool
-	runtime        tge.Runtime
-	firstTouchEvt  *tge.MouseEvent
-	secondTouchEvt *tge.MouseEvent
+	isInit                bool
+	runtime               tge.Runtime
+	gestureMode           bool
+	previousPinchDistance int32
+	previousPinchEvents   [3]*tge.MouseEvent
 }
 
 func (p *plugin) subscribeProxies() {
@@ -41,54 +42,39 @@ func (p *plugin) mouseEventProxy(event tge.Event) bool {
 	if mouseEvent.Button < 3 {
 		switch mouseEvent.Type {
 		case tge.TypeDown:
-			if mouseEvent.Button == 1 {
-				p.firstTouchEvt = &mouseEvent
-			} else {
-				p.secondTouchEvt = &mouseEvent
+			if mouseEvent.Button == 2 {
+				p.gestureMode = true
 			}
-			return false
+			p.previousPinchEvents[mouseEvent.Button] = &mouseEvent
 		case tge.TypeUp:
-			if mouseEvent.Button == 1 {
-				p.firstTouchEvt = nil
-			} else {
-				p.secondTouchEvt = nil
-			}
-			return false
+			p.gestureMode = false
+			p.previousPinchDistance = 0
 		case tge.TypeMove:
-			xOffset := int32(0)
-			yOffset := int32(0)
-			if mouseEvent.Button == 1 {
-				fmt.Println("1")
-				if p.firstTouchEvt != nil {
-					fmt.Println("11")
-					xOffset = mouseEvent.X - p.firstTouchEvt.X
-					yOffset = mouseEvent.Y - p.firstTouchEvt.Y
+			if p.gestureMode {
+				var xOffset, yOffset float64
+				if mouseEvent.Button == 1 {
+					xOffset = float64(mouseEvent.X - p.previousPinchEvents[2].X)
+					yOffset = float64(mouseEvent.Y - p.previousPinchEvents[2].Y)
+				} else {
+					xOffset = float64(mouseEvent.X - p.previousPinchEvents[1].X)
+					yOffset = float64(mouseEvent.Y - p.previousPinchEvents[1].Y)
 				}
-				if p.secondTouchEvt != nil {
-					p.firstTouchEvt = &mouseEvent
+				distance := int32(math.Sqrt(math.Pow(xOffset, 2) + math.Pow(yOffset, 2)))
+				if p.previousPinchDistance != 0 {
+					delta := distance - p.previousPinchDistance
+					ratio := float32(math.Abs(xOffset / yOffset))
+					p.previousPinchEvents[mouseEvent.Button] = &mouseEvent
+					p.previousPinchDistance = distance
+					p.runtime.Publish(PinchEvent{
+						Delta: delta,
+						Ratio: ratio,
+					})
+				} else {
+					p.previousPinchDistance = distance
 				}
-			} else {
-				fmt.Println("2")
-				if p.secondTouchEvt != nil {
-					fmt.Println("21")
-					xOffset = mouseEvent.X - p.secondTouchEvt.X
-					yOffset = mouseEvent.Y - p.secondTouchEvt.Y
-				}
-				if p.firstTouchEvt != nil {
-					p.secondTouchEvt = &mouseEvent
-				}
-			}
-
-			if p.firstTouchEvt != nil && p.firstTouchEvt != nil {
-				p.runtime.Publish(PinchEvent{
-					XOffset: xOffset,
-					YOffset: yOffset,
-				})
 				return true
 			}
-			return false
 		}
 	}
-
 	return false
 }
