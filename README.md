@@ -7,24 +7,60 @@
 
 Gestures support for TGE runtime - [TGE](https://github.com/thommil/tge)
 
-Currently gestures:
+This plugin is mainly used to adapt applications to touch inputs/events (mobile).
+
+Supported gestures:
+ * long press 
  * pinch
+ * swipe
 
 ## Targets
- * Browsers (mobile only WIP)
  * Mobile
 
 ## Dependencies
  * [TGE core](https://github.com/thommil/tge)
 
 ## Limitations
+Currenlty no support for desktop and browser, planned on mobile browser.
 
 ## Implementation
 See example at [GESTURE examples](https://github.com/Thommil/tge-examples/tree/master/plugins/tge-gesture)
 
 
 ```golang
-TODO
+package main
+
+import (
+    tge "github.com/thommil/tge"
+    gesture "github.com/thommil/tge-gesture"
+)
+
+type GestureApp struct {
+}
+
+func (app *GestureApp) OnCreate(settings *tge.Settings) error {
+    // Set all events or add only needed ones (ex: gesture.SwipeEventEnabled)
+    settings.EventMask = tge.AllEventsEnabled
+    return nil
+}
+
+func (app *GestureApp) OnStart(runtime tge.Runtime) error {
+    runtime.Subscribe(gesture.PinchEvent{}.Channel(), app.OnPinch)
+    runtime.Subscribe(gesture.SwipeEvent{}.Channel(), app.OnSwipe)
+    return nil
+}
+
+func (app *GestureApp) OnPinch(event tge.Event) bool {
+    ...
+    return false
+}
+
+func (app *GestureApp) OnSwipe(event tge.Event) bool {
+    ...
+    return false
+}
+
+...
 
 ```
 
