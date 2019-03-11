@@ -7,7 +7,7 @@
 
 Gestures support for TGE runtime - [TGE](https://github.com/thommil/tge)
 
-This plugin is mainly used to adapt applications to touch inputs/events (mobile).
+This plugin is mainly used to adapt applications to touch inputs/events (mobile and mobile browser).
 
 Supported gestures:
  * long press 
@@ -16,12 +16,13 @@ Supported gestures:
 
 ## Targets
  * Mobile
+ * Browser (mobile)
 
 ## Dependencies
  * [TGE core](https://github.com/thommil/tge)
 
 ## Limitations
-Currenlty no support for desktop and browser, planned on mobile browser.
+Currenlty no support for desktop and browser with no touch support.
 
 ## Implementation
 See example at [GESTURE examples](https://github.com/Thommil/tge-examples/tree/master/plugins/tge-gesture)
@@ -45,9 +46,15 @@ func (app *GestureApp) OnCreate(settings *tge.Settings) error {
 }
 
 func (app *GestureApp) OnStart(runtime tge.Runtime) error {
+    runtime.Subscribe(gesture.LongPressEvent{}.Channel(), app.OnLongPress)
     runtime.Subscribe(gesture.PinchEvent{}.Channel(), app.OnPinch)
     runtime.Subscribe(gesture.SwipeEvent{}.Channel(), app.OnSwipe)
     return nil
+}
+
+func (app *GestureApp) OnLongPress(event tge.Event) bool {
+    ...
+    return false
 }
 
 func (app *GestureApp) OnPinch(event tge.Event) bool {

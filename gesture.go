@@ -206,7 +206,7 @@ func (p *plugin) swipeProxy(event tge.Event) bool {
 		case tge.TypeMove:
 			p.swipeCounter++
 		case tge.TypeUp:
-			if p.swipeStartEvent != nil {
+			if p.swipeStartEvent != nil && p.swipeCounter > 0 {
 				xOffset := float64(mouseEvent.X - p.swipeStartEvent.X)
 				yOffset := float64(mouseEvent.Y - p.swipeStartEvent.Y)
 				velocity := int32(math.Sqrt(math.Pow(xOffset, 2)+math.Pow(yOffset, 2))) / p.swipeCounter
@@ -234,6 +234,7 @@ func (p *plugin) swipeProxy(event tge.Event) bool {
 func (p *plugin) pinchProxy(event tge.Event) bool {
 	mouseEvent := event.(tge.MouseEvent)
 
+	fmt.Println(mouseEvent)
 	// In any case, just touch 1 and 2 are handled
 	if mouseEvent.Button == tge.TouchFirst || mouseEvent.Button == tge.TouchSecond {
 		switch mouseEvent.Type {
