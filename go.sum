@@ -1,0 +1,5 @@
+github.com/thommil/tge v0.0.0-20190311230816-98b952a59b69 h1:bnNZF5zpiZKrschqHzLXg1GUj05QSU0jufzfE1qbkjA=
+github.com/thommil/tge v0.0.0-20190311230816-98b952a59b69/go.mod h1:0cgE2fgoKXa5LodhMJ8SysZEp/CJ900EXZjciSLvuK4=
+github.com/thommil/tge-mobile v0.0.0-20190304155026-a0779a310b28/go.mod h1:esUenx0eq059yhIVOB9vadnWk0+vDzKSIqrDR9o/T58=
+github.com/veandco/go-sdl2 v0.3.0 h1:IWYkHMp8V3v37NsKjszln8FFnX2+ab0538J371t+rss=
+github.com/veandco/go-sdl2 v0.3.0/go.mod h1:FB+kTpX9YTE+urhYiClnRzpOXbiWgaU3+5F2AB78DPg=
