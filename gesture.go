@@ -234,7 +234,6 @@ func (p *plugin) swipeProxy(event tge.Event) bool {
 func (p *plugin) pinchProxy(event tge.Event) bool {
 	mouseEvent := event.(tge.MouseEvent)
 
-	fmt.Println(mouseEvent)
 	// In any case, just touch 1 and 2 are handled
 	if mouseEvent.Button == tge.TouchFirst || mouseEvent.Button == tge.TouchSecond {
 		switch mouseEvent.Type {
