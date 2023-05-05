@@ -1,4 +1,4 @@
-module github.com/Thommil/tge-gesture
+module github.com/thommil/tge-gesture
 
 go 1.12
 
